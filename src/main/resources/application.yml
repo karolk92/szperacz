@@ -1,3 +1,7 @@
 micronaut:
   application:
     name: ec-szperacz
+
+kafka:
+  bootstrap:
+    servers: 10.10.38.201:6667

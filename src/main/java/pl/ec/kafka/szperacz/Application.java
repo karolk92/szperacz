@@ -2,9 +2,9 @@ package pl.ec.kafka.szperacz;
 
 import io.micronaut.runtime.Micronaut;
 
-public class KafkaSzperacz {
+public class Application {
 
     public static void main(String[] args) {
-        Micronaut.run(KafkaSzperacz.class);
+        Micronaut.run(Application.class);
     }
 }
