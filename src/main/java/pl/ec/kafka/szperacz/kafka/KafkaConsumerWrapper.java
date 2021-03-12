@@ -18,24 +18,15 @@ class KafkaConsumerWrapper {
     private static final int POLL_TIMEOUT_MILLISECOND = 500;
     private static final ZoneId LOCAL_DATE_TIME_ZONE_ID = ZoneId.of("UTC");
 
-    String partitioningKeyRecordEntry;
     String partitioningKey;
     TopicPartition topicPartition;
     KafkaConsumer<String, String> consumer;
-
-    public KafkaConsumerWrapper(String partitioningKey, TopicPartition topicPartition,
-        KafkaConsumer<String, String> consumer) {
-        this.partitioningKey = partitioningKey;
-        this.partitioningKeyRecordEntry = "\"deviceId\":" + partitioningKey;
-        this.topicPartition = topicPartition;
-        this.consumer = consumer;
-    }
 
     List<ConsumerRecord<String, String>> readRecords(LocalDateTime from, LocalDateTime to) {
 
         consumer.seek(topicPartition, findOffsetForDateTime(from));
 
-        var toTimestamp = dateToTimestamp(to);
+        long toTimestamp = dateToTimestamp(to);
         var result = new ArrayList<ConsumerRecord<String, String>>();
 
         boolean pollEndFlag = false;
@@ -57,7 +48,7 @@ class KafkaConsumerWrapper {
     }
 
     private boolean recordContainsPartitioningKey(ConsumerRecord<String, String> record) {
-        return record.value().contains(partitioningKeyRecordEntry);
+        return record.key().equals(partitioningKey);
     }
 
     private Long findOffsetForDateTime(LocalDateTime localDateTime) {
