@@ -1,6 +1,9 @@
 micronaut:
   application:
     name: ec-szperacz
+  server:
+    cors:
+      enabled: true
 
 kafka:
   bootstrap:

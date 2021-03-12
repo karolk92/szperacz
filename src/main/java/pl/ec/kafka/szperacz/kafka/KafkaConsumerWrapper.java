@@ -1,14 +1,11 @@
 package pl.ec.kafka.szperacz.kafka;
 
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -29,7 +26,7 @@ class KafkaConsumerWrapper {
     public KafkaConsumerWrapper(String partitioningKey, TopicPartition topicPartition,
         KafkaConsumer<String, String> consumer) {
         this.partitioningKey = partitioningKey;
-        this.partitioningKeyRecordEntry = "\"deviceId\":" + "4935";
+        this.partitioningKeyRecordEntry = "\"deviceId\":" + partitioningKey;
         this.topicPartition = topicPartition;
         this.consumer = consumer;
     }
