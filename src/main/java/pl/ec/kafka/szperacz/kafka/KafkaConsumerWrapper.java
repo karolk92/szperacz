@@ -17,14 +17,25 @@ class KafkaConsumerWrapper {
     private static final int MAX_NUMBER_OF_RECORDS = 25000;
     private static final int POLL_TIMEOUT_MILLISECOND = 500;
     private static final ZoneId LOCAL_DATE_TIME_ZONE_ID = ZoneId.of("UTC");
+    public static final long NOT_FOUND_OFFSET_VALUE = -1L;
 
     String partitioningKey;
     TopicPartition topicPartition;
     KafkaConsumer<String, String> consumer;
 
     List<ConsumerRecord<String, String>> readRecords(LocalDateTime from, LocalDateTime to) {
+        long lastOffset = lastOffsetForPartition();
+        long firstOffset = findOffsetForDateTime(from);
 
-        consumer.seek(topicPartition, findOffsetForDateTime(from));
+        if (lastOffset == NOT_FOUND_OFFSET_VALUE) {
+            return List.of();
+        }
+
+        consumer.seek(topicPartition, firstOffset);
+
+        if (lastOffset == consumer.position(topicPartition)) {
+            return List.of();
+        }
 
         long toTimestamp = dateToTimestamp(to);
         var result = new ArrayList<ConsumerRecord<String, String>>();
@@ -34,7 +45,7 @@ class KafkaConsumerWrapper {
         while (!pollEndFlag) {
             var records = consumer.poll(Duration.ofSeconds(POLL_TIMEOUT_MILLISECOND)).records(topicPartition);
             for (ConsumerRecord<String, String> record : records) {
-                if (record.timestamp() > toTimestamp) {
+                if (record.timestamp() > toTimestamp || record.offset() == (lastOffset - 1)) {
                     pollEndFlag = true;
                     break;
                 }
@@ -45,6 +56,11 @@ class KafkaConsumerWrapper {
         }
 
         return result;
+    }
+
+    private Long lastOffsetForPartition() {
+        consumer.seekToEnd(List.of(topicPartition));
+        return consumer.position(topicPartition);
     }
 
     private boolean recordContainsPartitioningKey(ConsumerRecord<String, String> record) {
@@ -63,6 +79,10 @@ class KafkaConsumerWrapper {
         if (beginningOffset.size() > 1) {
             throw new RuntimeException(
                 "Given partitioning key: " + partitioningKey + " present on multiple partitions" + " at partition: " + topicPartition.toString());
+        }
+
+        if (beginningOffset.get(topicPartition) == null) {
+            return NOT_FOUND_OFFSET_VALUE;
         }
 
         return beginningOffset.get(topicPartition).offset();
