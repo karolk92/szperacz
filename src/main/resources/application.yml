@@ -5,6 +5,8 @@ micronaut:
     cors:
       enabled: true
 
-kafka:
-  bootstrap:
-    servers: 10.10.38.201:6667
+szperacz:
+  event-fetch-limit: 25000
+  kafka:
+    group-id: szperacz
+    bootstrap-servers: 10.10.38.201:6667

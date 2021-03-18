@@ -14,16 +14,15 @@ import org.apache.kafka.common.TopicPartition;
 @Value
 class KafkaConsumerWrapper {
 
-    private static final int MAX_NUMBER_OF_RECORDS = 25000;
     private static final int POLL_TIMEOUT_MILLISECOND = 500;
     private static final ZoneId LOCAL_DATE_TIME_ZONE_ID = ZoneId.of("UTC");
-    public static final long NOT_FOUND_OFFSET_VALUE = -1L;
+    private static final long NOT_FOUND_OFFSET_VALUE = -1L;
 
     String partitioningKey;
     TopicPartition topicPartition;
     KafkaConsumer<String, String> consumer;
 
-    List<ConsumerRecord<String, String>> readRecords(LocalDateTime from, LocalDateTime to) {
+    List<ConsumerRecord<String, String>> readRecords(LocalDateTime from, LocalDateTime to, int limit) {
         long lastOffset = lastOffsetForPartition();
         long firstOffset = findOffsetForDateTime(from);
 
@@ -45,7 +44,7 @@ class KafkaConsumerWrapper {
         while (!pollEndFlag) {
             var records = consumer.poll(Duration.ofSeconds(POLL_TIMEOUT_MILLISECOND)).records(topicPartition);
             for (ConsumerRecord<String, String> record : records) {
-                if (record.timestamp() > toTimestamp || record.offset() == (lastOffset - 1)) {
+                if (record.timestamp() > toTimestamp || record.offset() == (lastOffset - 1) || result.size() >= limit) {
                     pollEndFlag = true;
                     break;
                 }

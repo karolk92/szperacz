@@ -3,14 +3,19 @@ package pl.ec.kafka.szperacz.kafka;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Properties;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.utils.Utils;
+import pl.ec.kafka.szperacz.kafka.SzperaczConfiguration.KafkaConfiguration;
 
+@RequiredArgsConstructor
 public class KafkaConsumerFactory {
+
+    private final KafkaConfiguration configuration;
 
     @SneakyThrows
     KafkaConsumerWrapper create(String topic, String partitioningKey) {
@@ -23,10 +28,10 @@ public class KafkaConsumerFactory {
     private Properties configuration() {
         Properties config = new Properties();
         config.put("client.id", InetAddress.getLocalHost().getHostName());
-        config.put("group.id", "foo");
+        config.put("group.id", configuration.getGroupId());
         config.put("key.deserializer", StringDeserializer.class.getName());
         config.put("value.deserializer", StringDeserializer.class.getName());
-        config.put("bootstrap.servers", "10.10.38.201:6667");
+        config.put("bootstrap.servers", configuration.getBootstrapServers());
         return config;
     }
 
