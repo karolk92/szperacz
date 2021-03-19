@@ -5,6 +5,13 @@ micronaut:
     cors:
       enabled: true
 
+redis:
+  uri: redis://10.10.38.81:6379
+
+logger:
+  levels:
+    io.lettuce.core: ERROR
+
 szperacz:
   event-fetch-limit: 25000
   kafka:

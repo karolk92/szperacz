@@ -1,6 +1,7 @@
 package pl.ec.kafka.szperacz;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import pl.ec.kafka.szperacz.kafka.Events;
+import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @MicronautTest(environments = "integration")
@@ -36,5 +38,19 @@ class SzperaczControllerIT {
 
         // then
         assertNotNull(actual);
+    }
+
+    @Test
+    void shouldSearchForGantry() {
+        // given
+        String gantry = "A01_0006,4_TF_0";
+
+        // when
+        var actual = client.toBlocking().retrieve(
+            HttpRequest.GET("/maps/gantry=" + gantry),
+            Argument.of(MapCluster.class));
+
+        // then
+        assertNull(actual);
     }
 }
