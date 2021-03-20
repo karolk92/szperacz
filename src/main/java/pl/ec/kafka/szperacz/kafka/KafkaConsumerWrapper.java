@@ -26,7 +26,7 @@ class KafkaConsumerWrapper {
         long lastOffset = lastOffsetForPartition();
         long firstOffset = findOffsetForDateTime(from);
 
-        if (lastOffset == NOT_FOUND_OFFSET_VALUE) {
+        if (lastOffset == NOT_FOUND_OFFSET_VALUE || firstOffset == NOT_FOUND_OFFSET_VALUE) {
             return List.of();
         }
 

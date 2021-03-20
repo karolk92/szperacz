@@ -8,11 +8,15 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.annotation.MicronautTest;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import pl.ec.kafka.szperacz.kafka.Events;
+import pl.ec.kafka.szperacz.kafka.SearchRequest;
+import pl.ec.kafka.szperacz.kafka.SearchResponse;
 import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -35,6 +39,25 @@ class SzperaczControllerIT {
         var actual = client.toBlocking().retrieve(
             HttpRequest.GET("/topic=" + topic + "&from=" + from + "&to=" + to + "&deviceId=" + deviceId),
             Argument.listOf(Events.class));
+
+        // then
+        assertNotNull(actual);
+    }
+
+    @Test
+    void shouldSearchPost() {
+        // given
+        var request = new SearchRequest(
+            LocalDateTime.now().minusHours(1),
+            LocalDateTime.now().plusHours(1),
+            List.of("sorted_out", "processed_out"),
+            "4935",
+            false);
+
+        // when
+        var actual = client.toBlocking().retrieve(
+            HttpRequest.POST("/search", request),
+            Argument.of(SearchResponse.class));
 
         // then
         assertNotNull(actual);

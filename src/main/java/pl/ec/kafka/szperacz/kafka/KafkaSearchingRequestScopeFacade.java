@@ -19,10 +19,16 @@ public class KafkaSearchingRequestScopeFacade {
         this.configuration = szperaczConfiguration;
     }
 
+    public SearchResponse search(SearchRequest searchRequest) {
+        var eventsMap = searchRequest.getTopics().stream()
+            .map(topic -> search(topic, searchRequest.getFrom(), searchRequest.getTo(), searchRequest.getKey()))
+            .collect(Collectors.toList());
+        return new SearchResponse(searchRequest.getKey(), eventsMap);
+    }
+
     public Events search(String topic, LocalDateTime from, LocalDateTime to, String deviceId) {
         var consumer = kafkaClientFactory.create(topic, deviceId);
         return Events.anEvents()
-            .deviceId(deviceId)
             .partition(consumer.getTopicPartition().partition())
             .topic(consumer.getTopicPartition().topic())
             .events(mapConsumerRecords(consumer.readRecords(from, to, configuration.getEventFetchLimit())))

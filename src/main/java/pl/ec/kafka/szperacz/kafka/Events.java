@@ -14,6 +14,5 @@ public class Events {
 
     private String topic;
     private int partition;
-    private String deviceId;
     private List<Event> events;
 }
