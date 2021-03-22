@@ -11,6 +11,7 @@ import io.micronaut.test.annotation.MicronautTest;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.inject.Inject;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -19,6 +20,7 @@ import pl.ec.kafka.szperacz.kafka.SearchRequest;
 import pl.ec.kafka.szperacz.kafka.SearchResponse;
 import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
 
+@Disabled
 @TestInstance(Lifecycle.PER_CLASS)
 @MicronautTest(environments = "integration")
 class SzperaczControllerIT {

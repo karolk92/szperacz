@@ -13,8 +13,8 @@ import pl.ec.kafka.szperacz.kafka.Events;
 import pl.ec.kafka.szperacz.kafka.KafkaSearchingRequestScopeFacade;
 import pl.ec.kafka.szperacz.kafka.SearchRequest;
 import pl.ec.kafka.szperacz.kafka.SearchResponse;
-import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
 import pl.ec.kafka.szperacz.preprocessing.PreprocessingFacade;
+import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
 
 @Controller("/api/szperacz")
 public class SzperaczController {

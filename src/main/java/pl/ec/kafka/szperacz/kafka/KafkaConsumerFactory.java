@@ -1,6 +1,7 @@
 package pl.ec.kafka.szperacz.kafka;
 
 import java.net.InetAddress;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,6 @@ public class KafkaConsumerFactory {
     }
 
     private int determinePartitionNumber(String deviceId, int numberOfPartitions) {
-        return Utils.toPositive(Utils.murmur2(deviceId.getBytes())) % numberOfPartitions;
+        return Utils.toPositive(Utils.murmur2(deviceId.getBytes(Charset.defaultCharset()))) % numberOfPartitions;
     }
 }
