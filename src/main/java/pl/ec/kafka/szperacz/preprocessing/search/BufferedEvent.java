@@ -17,6 +17,10 @@ public class BufferedEvent {
     private List<Event> inputEvents;
     private List<Event> outputEvents;
 
+    private int bufferPartition;
+    private int inputPartition;
+    private int outputPartition;
+
     public void addOutputEvents(Event event) {
         if (this.outputEvents == null) {
             this.outputEvents = Lists.newArrayList();

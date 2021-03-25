@@ -60,7 +60,11 @@ public class PreprocessingFacade {
                 } else {
 
                     // Either new buffer or no related buffer exists
-                    bufferedEvents.add(builder.build());
+                    bufferedEvents.add(builder
+                        .bufferPartition(buffersSearchResult.getPartition())
+                        .inputPartition(inputSearchResult.getPartition())
+                        .outputPartition(outputSearchResult.getPartition())
+                        .build());
 
                     // Still some buffers left to be analyzed
                     if (bufferIterator.hasNext()) {
@@ -82,7 +86,11 @@ public class PreprocessingFacade {
                 }
             }
 
-            bufferedEvents.add(builder.build());
+            bufferedEvents.add(builder
+                .bufferPartition(buffersSearchResult.getPartition())
+                .inputPartition(inputSearchResult.getPartition())
+                .outputPartition(outputSearchResult.getPartition())
+                .build());
         }
 
         addOutputEventsToBufferedEvents(bufferedEvents, outputSearchResult.getEvents());
