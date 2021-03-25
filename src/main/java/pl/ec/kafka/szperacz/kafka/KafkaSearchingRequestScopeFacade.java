@@ -3,6 +3,7 @@ package pl.ec.kafka.szperacz.kafka;
 import io.micronaut.runtime.http.scope.RequestScope;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,13 +27,18 @@ public class KafkaSearchingRequestScopeFacade {
         return new SearchResponse(searchRequest.getKey(), eventsMap);
     }
 
-    public Events search(String topic, LocalDateTime from, LocalDateTime to, String deviceId) {
-        var consumer = kafkaClientFactory.create(topic, deviceId);
+    public Events search(String topic, LocalDateTime from, LocalDateTime to, String partitioningKey) {
+        var consumer = kafkaClientFactory.create(topic, partitioningKey);
         return Events.anEvents()
             .partition(consumer.getTopicPartition().partition())
             .topic(consumer.getTopicPartition().topic())
             .events(mapConsumerRecords(consumer.readRecords(from, to, configuration.getEventFetchLimit())))
             .build();
+    }
+
+    public <T> Events search(String topic, LocalDateTime form, LocalDateTime to, String partitioningKey, List<T> elements, BiPredicate<T, T> correlatingFunction) {
+        var consumer = kafkaClientFactory.create(topic, partitioningKey);
+        return Events.anEvents().build();
     }
 
     private List<Event> mapConsumerRecords(List<ConsumerRecord<String, String>> records) {

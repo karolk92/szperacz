@@ -19,6 +19,8 @@ import pl.ec.kafka.szperacz.kafka.Events;
 import pl.ec.kafka.szperacz.kafka.SearchRequest;
 import pl.ec.kafka.szperacz.kafka.SearchResponse;
 import pl.ec.kafka.szperacz.preprocessing.model.MapCluster;
+import pl.ec.kafka.szperacz.preprocessing.search.SearchPreprocessingRequest;
+import pl.ec.kafka.szperacz.preprocessing.search.SearchPreprocessingResponse;
 
 @Disabled
 @TestInstance(Lifecycle.PER_CLASS)
@@ -53,13 +55,30 @@ class SzperaczControllerIT {
             LocalDateTime.now().minusHours(1),
             LocalDateTime.now().plusHours(1),
             List.of("sorted_out", "processed_out"),
-            "4935",
-            false);
+            "4935");
 
         // when
         var actual = client.toBlocking().retrieve(
             HttpRequest.POST("/search", request),
             Argument.of(SearchResponse.class));
+
+        // then
+        assertNotNull(actual);
+    }
+
+    @Test
+    void shouldDoPreprocessingSearch() {
+        // given
+        var request = new SearchPreprocessingRequest(
+            LocalDateTime.of(2021, 3, 17, 7, 50, 0),
+            LocalDateTime.of(2021, 3, 17, 9, 50, 0),
+            "sorted_out", "buffered_out", "preprocessed_out",
+            "5554");
+
+        // when
+        var actual = client.toBlocking().retrieve(
+            HttpRequest.POST("/searchPreprocessing", request),
+            Argument.of(SearchPreprocessingResponse.class));
 
         // then
         assertNotNull(actual);

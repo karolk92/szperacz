@@ -14,4 +14,5 @@ public class Event {
     private long timestamp;
     private long offset;
     private String body;
+    private int bufferIndex;
 }
