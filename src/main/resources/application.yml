@@ -17,3 +17,6 @@ szperacz:
   kafka:
     group-id: szperacz
     bootstrap-servers: 10.10.38.201:6667
+  catalog:
+    path: '/'
+    compress-files: true
