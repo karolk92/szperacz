@@ -11,7 +11,7 @@ import io.micronaut.http.annotation.Put;
 import java.util.List;
 import javax.inject.Inject;
 import pl.ec.kafka.szperacz.catalog.model.Catalog;
-import pl.ec.kafka.szperacz.catalog.model.CatalogContent;
+import pl.ec.kafka.szperacz.catalog.model.CatalogEntry;
 import pl.ec.kafka.szperacz.catalog.model.CreateCatalogEntryRequest;
 import pl.ec.kafka.szperacz.catalog.model.CreateCatalogRequest;
 
@@ -47,7 +47,7 @@ public class CatalogController {
 
     @Get("/{catalogId}/entries/{entryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    CatalogContent getCatalogEntry(String catalogId, String entryId) {
+    CatalogEntry getCatalogEntry(String catalogId, String entryId) {
         return facade.getEntry(catalogId, entryId);
     }
 

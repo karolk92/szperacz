@@ -1,5 +1,5 @@
 package pl.ec.kafka.szperacz.catalog.model;
 
-public abstract class CatalogContent {
+public interface CatalogContent {
 
 }

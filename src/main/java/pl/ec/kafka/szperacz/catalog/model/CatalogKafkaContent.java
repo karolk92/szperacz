@@ -1,5 +1,12 @@
 package pl.ec.kafka.szperacz.catalog.model;
 
-public class CatalogKafkaContent extends CatalogContent {
+import lombok.Builder;
+import lombok.Data;
 
+@Builder(builderMethodName = "aCatalogKafkaContent")
+@Data
+public class CatalogKafkaContent implements CatalogContent {
+
+    private String topic;
+    private String content;
 }

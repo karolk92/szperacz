@@ -1,5 +1,15 @@
 package pl.ec.kafka.szperacz.catalog.model;
 
-public class CatalogPreprocessingContent extends CatalogContent {
+import lombok.Builder;
+import lombok.Data;
 
+@Builder(builderMethodName = "aCatalogPreprocessingContent")
+@Data
+public class CatalogPreprocessingContent implements CatalogContent {
+
+    private String inputTopic;
+    private String bufferTopic;
+    private String outputTopic;
+
+    private String content;
 }
