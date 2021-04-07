@@ -52,7 +52,7 @@ public class CatalogControllerIT {
     @Test
     void shouldCreateCatalog() {
         // given
-        var request = new CreateCatalogRequest("catalog name", "description", "grzegorz brzęczyszczykiewicz");
+        var request = new CreateCatalogRequest("catalog name 2", "description", "grzegorz brzęczyszczykiewicz");
 
         // when
         var actual = client.toBlocking().retrieve(HttpRequest.POST("/", request));
@@ -76,7 +76,7 @@ public class CatalogControllerIT {
     @Test
     void shouldDeleteEntry() {
         // given
-        var catalogId = "catalog_name";
+        var catalogId = "catalog_name_2";
         var entryId = "Nejm_oho2";
 
         // when

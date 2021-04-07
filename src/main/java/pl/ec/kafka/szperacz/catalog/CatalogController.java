@@ -39,7 +39,7 @@ public class CatalogController {
         facade.deleteCatalog(catalogId);
     }
 
-    @Put("/{catalogId}")
+    @Put("/{catalogId}/entries")
     @Produces(MediaType.APPLICATION_JSON)
     void addCatalogEntry(String catalogId, @Body CreateCatalogEntryRequest request) {
         facade.addEntry(catalogId, request);
