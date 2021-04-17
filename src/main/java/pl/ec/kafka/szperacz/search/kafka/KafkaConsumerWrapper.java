@@ -46,10 +46,12 @@ class KafkaConsumerWrapper {
             for (ConsumerRecord<String, String> record : records) {
                 if (record.timestamp() > toTimestamp || record.offset() == (lastOffset - 1) || result.size() >= limit) {
                     pollEndFlag = true;
-                    break;
                 }
                 if (recordContainsPartitioningKey(record)) {
                     result.add(record);
+                }
+                if (pollEndFlag) {
+                    break;
                 }
             }
         }
