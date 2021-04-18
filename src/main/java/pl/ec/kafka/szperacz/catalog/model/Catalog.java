@@ -1,6 +1,8 @@
 package pl.ec.kafka.szperacz.catalog.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,10 @@ public class Catalog {
 
     @JsonView(CatalogOnly.class)
     private String owner;
+
+    @JsonView({CatalogOnly.class})
+    @JsonFormat(pattern = "dd-M-yyyy'T'HH:mm:ss")
+    private LocalDateTime created;
 
     @Singular
     @JsonView(CatalogOnly.class)

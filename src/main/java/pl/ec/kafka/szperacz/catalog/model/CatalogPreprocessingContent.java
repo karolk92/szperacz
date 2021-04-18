@@ -12,4 +12,7 @@ public class CatalogPreprocessingContent implements CatalogContent {
     private String outputTopic;
 
     private String content;
+    private int inputEventsNumber;
+    private int bufferEventsNumber;
+    private int outputEventsNumber;
 }

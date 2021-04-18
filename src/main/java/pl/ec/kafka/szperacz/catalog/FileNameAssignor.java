@@ -11,29 +11,33 @@ import pl.ec.kafka.szperacz.catalog.model.CatalogPreprocessingContent;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 class FileNameAssignor {
 
-    static String assignFileName(CatalogContent content) {
+    static String assignFileName(CatalogContent content, boolean gzipped) {
         if (content instanceof CatalogPreprocessingContent) {
             var typedContent = (CatalogPreprocessingContent) content;
             return preprocessingContentFileName(List.of(
                 typedContent.getInputTopic(),
                 typedContent.getBufferTopic(),
                 typedContent.getOutputTopic()
-            ));
+            ), gzipped);
         } else if (content instanceof CatalogKafkaContent) {
             var typedContent = (CatalogKafkaContent) content;
-            return kafkaContentFileName(typedContent.getTopic());
+            return kafkaContentFileName(typedContent.getTopic(), gzipped);
         }
 
         throw new IllegalArgumentException("Unable to assign file name: unknown type");
     }
 
-    static String preprocessingContentFileName(List<String> topics) {
+    static String preprocessingContentFileName(List<String> topics, boolean gzipped) {
         Preconditions.checkArgument(topics.size() == 3);
-        return topics.get(0) + "." + topics.get(1) + "." + topics.get(2) + ".json";
+        return topics.get(0) + "." + topics.get(1) + "." + topics.get(2) + getSuffix(gzipped);
     }
 
-    static String kafkaContentFileName(String topic) {
-        return topic + ".json";
+    static String kafkaContentFileName(String topic, boolean gzipped) {
+        return topic + getSuffix(gzipped);
+    }
+
+    static String getSuffix(boolean gzipped) {
+        return gzipped ? ".zip" : ".json";
     }
 
 }

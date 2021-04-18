@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPOutputStream;
 import lombok.SneakyThrows;
 import pl.ec.kafka.szperacz.catalog.JsonViews.CatalogOnly;
 import pl.ec.kafka.szperacz.catalog.model.Catalog;
@@ -107,13 +110,17 @@ class CatalogFileSystem {
                 .inputTopic(catalogEntry.getTopics().get(0))
                 .bufferTopic(catalogEntry.getTopics().get(1))
                 .outputTopic(catalogEntry.getTopics().get(2))
-                .content(readFile(entryPath.resolve(FileNameAssignor.preprocessingContentFileName(catalogEntry.getTopics())).toFile(), catalogEntry.isCompressed()))
+                .content(
+                    readFile(entryPath.resolve(
+                        FileNameAssignor.preprocessingContentFileName(
+                            catalogEntry.getTopics(),
+                            catalogEntry.isCompressed())).toFile()))
                 .build());
         } else if (catalogEntry.isKafkaType()) {
             catalogContents = catalogEntry.getTopics().stream()
                 .map(topic -> CatalogKafkaContent.aCatalogKafkaContent()
                     .topic(topic)
-                    .content(readFile(entryPath.resolve(FileNameAssignor.kafkaContentFileName(topic)).toFile(), catalogEntry.isCompressed()))
+                    .content(readFile(entryPath.resolve(FileNameAssignor.kafkaContentFileName(topic, catalogEntry.isCompressed())).toFile()))
                     .build())
                 .collect(Collectors.toList());
         }
@@ -152,10 +159,10 @@ class CatalogFileSystem {
 
     private List<String> saveKafkaEntries(Path directoryPath, List<CatalogContent> entries) {
         List<String> topics = new ArrayList<>();
-        entries.stream().map(content -> (CatalogKafkaContent) content).forEach(content -> {
+        entries.stream().map(CatalogKafkaContent.class::cast).forEach(content -> {
             topics.add(content.getTopic());
             saveFile(
-                new File(directoryPath.toFile(), FileNameAssignor.assignFileName(content)),
+                new File(directoryPath.toFile(), FileNameAssignor.assignFileName(content, compress)),
                 content.getContent(),
                 TRY_TO_COMPRESS);
         });
@@ -165,7 +172,7 @@ class CatalogFileSystem {
     private List<String> savePreprocessingEntries(Path directoryPath, List<CatalogContent> entries) {
         var content = (CatalogPreprocessingContent) entries.get(0);
         saveFile(
-            new File(directoryPath.toFile(), FileNameAssignor.assignFileName(content)), content.getContent(),
+            new File(directoryPath.toFile(), FileNameAssignor.assignFileName(content, compress)), content.getContent(),
             TRY_TO_COMPRESS);
         return List.of(content.getInputTopic(), content.getBufferTopic(), content.getOutputTopic());
     }
@@ -177,18 +184,25 @@ class CatalogFileSystem {
     }
 
     private List<File> listDirectories(File file) {
-        return List.of(file.listFiles(File::isDirectory));
+        return List.of(Objects.requireNonNull(file.listFiles(File::isDirectory)));
     }
 
     @SneakyThrows
     private void saveFile(File file, String content, boolean tryToCompress) {
-        try (Writer writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(content);
+        if (!tryToCompress) {
+            try (Writer writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(content);
+            }
+        } else {
+            try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file))) {
+                gzipOutputStream.write(content.getBytes(StandardCharsets.UTF_8));
+                gzipOutputStream.finish();
+            }
         }
     }
 
     @SneakyThrows
-    private String readFile(File file, boolean compressed) {
+    private String readFile(File file) {
         return Files.readString(file.toPath());
     }
 

@@ -9,4 +9,5 @@ public class CatalogKafkaContent implements CatalogContent {
 
     private String topic;
     private String content;
+    private int eventsNumber;
 }

@@ -9,6 +9,7 @@ public class CreateCatalogEntryRequest {
 
     String deviceId;
     String name;
+    String description;
 
     @JsonFormat(pattern = "dd-M-yyyy'T'HH:mm:ss")
     LocalDateTime from;

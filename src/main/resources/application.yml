@@ -19,4 +19,4 @@ szperacz:
     bootstrap-servers: 10.10.38.201:6667
   catalog:
     path: '/szperacz_catalog/'
-    compress-files: false
+    compress-files: true

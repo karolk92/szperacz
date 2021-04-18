@@ -1,5 +1,6 @@
 package pl.ec.kafka.szperacz.catalog;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import pl.ec.kafka.szperacz.catalog.model.CreateCatalogEntryRequest;
 import pl.ec.kafka.szperacz.catalog.model.CreateCatalogRequest;
 import pl.ec.kafka.szperacz.catalog.model.CreateKafkaEntryRequest;
 import pl.ec.kafka.szperacz.catalog.model.CreatePreprocessingEntryRequest;
+import pl.ec.kafka.szperacz.catalog.model.EntrySizeEstimator;
 
 @Singleton
 public class CatalogFacade {
@@ -27,6 +29,7 @@ public class CatalogFacade {
     public void createCatalog(CreateCatalogRequest request) {
         repository.saveCatalog(Catalog.aCatalog()
             .name(request.getName())
+            .created(LocalDateTime.now())
             .description(request.getDescription())
             .owner(request.getOwner())
             .build());
@@ -65,6 +68,8 @@ public class CatalogFacade {
         return CatalogEntry.aCatalogEntry()
             .deviceId(request.getDeviceId())
             .name(request.getName())
+            .description(request.getDescription())
+            .created(LocalDateTime.now())
             .type(type)
             .from(request.getFrom())
             .to(request.getTo())
@@ -78,6 +83,7 @@ public class CatalogFacade {
             .map(entry -> CatalogKafkaContent.aCatalogKafkaContent()
                 .topic(entry.getKey())
                 .content(entry.getValue())
+                .eventsNumber(EntrySizeEstimator.kafkaEventsNumber(entry.getValue()))
                 .build())
             .collect(Collectors.toList());
     }
@@ -85,8 +91,11 @@ public class CatalogFacade {
     private List<CatalogContent> toCatalogContents(CreatePreprocessingEntryRequest request) {
         return List.of(CatalogPreprocessingContent.aCatalogPreprocessingContent()
             .inputTopic(request.getInputTopic())
+            .inputEventsNumber(EntrySizeEstimator.preprocessingInputTopicEventsNumber(request))
             .bufferTopic(request.getBufferTopic())
+            .bufferEventsNumber(EntrySizeEstimator.preprocessingBufferedTopicEventsNumber(request))
             .outputTopic(request.getOutputTopic())
+            .outputEventsNumber(EntrySizeEstimator.preprocessingOutputTopicEventsNumber(request))
             .content(request.getContent())
             .build());
     }

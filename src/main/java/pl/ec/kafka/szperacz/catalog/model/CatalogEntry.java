@@ -21,6 +21,9 @@ public class CatalogEntry {
     private String name;
 
     @JsonView({CatalogOnly.class, WholeCatalog.class})
+    private String description;
+
+    @JsonView({CatalogOnly.class, WholeCatalog.class})
     private String type;
 
     @JsonView({CatalogOnly.class, WholeCatalog.class})
@@ -28,6 +31,10 @@ public class CatalogEntry {
 
     @JsonView({CatalogOnly.class, WholeCatalog.class})
     private String deviceId;
+
+    @JsonView({CatalogOnly.class, WholeCatalog.class})
+    @JsonFormat(pattern = "dd-M-yyyy'T'HH:mm:ss")
+    private LocalDateTime created;
 
     @JsonView({CatalogOnly.class, WholeCatalog.class})
     @JsonFormat(pattern = "dd-M-yyyy'T'HH:mm:ss")

@@ -95,6 +95,7 @@ public class CatalogControllerIT {
         var request = new CreateCatalogEntryRequest(
             "12345",
             "Nejm oho2",
+            "desciption",
             LocalDateTime.now().minusHours(1),
             LocalDateTime.now().plusHours(1),
             content,
@@ -114,6 +115,7 @@ public class CatalogControllerIT {
         var request = new CreateCatalogEntryRequest(
             "12345",
             "preprocessing drilldown",
+            "description",
             LocalDateTime.now().minusHours(1),
             LocalDateTime.now().plusHours(1),
             null,
