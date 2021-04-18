@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -189,8 +190,9 @@ class CatalogFileSystem {
 
     @SneakyThrows
     private void saveFile(File file, String content, boolean tryToCompress) {
-        if (!tryToCompress) {
-            try (Writer writer = new BufferedWriter(new FileWriter(file))) {
+        var compress = tryToCompress && this.compress;
+        if (!compress) {
+            try (Writer writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
                 writer.write(content);
             }
         } else {
@@ -203,7 +205,7 @@ class CatalogFileSystem {
 
     @SneakyThrows
     private String readFile(File file) {
-        return Files.readString(file.toPath());
+        return Files.readString(file.toPath(), StandardCharsets.UTF_8);
     }
 
     private void createDirectory(URI path) {
