@@ -77,7 +77,6 @@ public class CatalogFacade {
             .build();
     }
 
-
     private List<CatalogContent> toCatalogContents(CreateKafkaEntryRequest request) {
         return request.getTopicToContent().entrySet().stream()
             .map(entry -> CatalogKafkaContent.aCatalogKafkaContent()

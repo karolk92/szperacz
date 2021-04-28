@@ -17,7 +17,7 @@ public class CustomMapDeserializer extends JsonDeserializer<Map<String, String>>
     public Map<String, String> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
         Map<String, String> result = new HashMap<>();
         var readValueAsTree = p.readValueAsTree();
-        if (readValueAsTree != null&& readValueAsTree instanceof ArrayNode) {
+        if (readValueAsTree != null && readValueAsTree instanceof ArrayNode) {
             Iterator<JsonNode> i = ((ArrayNode) readValueAsTree).elements();
             while (i.hasNext()) {
                 var jsonNode = i.next();

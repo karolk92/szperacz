@@ -2,13 +2,13 @@ package pl.ec.kafka.szperacz.catalog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,11 +56,11 @@ class CatalogFileSystem {
     void saveCatalog(Catalog catalog) {
         catalog.setId(replaceWhitespaces(catalog.getName()));
         validateCatalogUniqueness(catalog.getId());
-        var catalogURI = getCatalogURI(catalog.getId());
-        createDirectory(catalogURI);
+        var catalogUri = getCatalogUri(catalog.getId());
+        createDirectory(catalogUri);
 
         saveFile(
-            new File(catalogURI.getPath(), CATALOG_META_FILENAME),
+            new File(catalogUri.getPath(), CATALOG_META_FILENAME),
             objectMapper.writerWithView(CatalogOnly.class).writeValueAsString(catalog),
             DO_NOT_TRY_TO_COMPRESS);
     }
@@ -80,7 +80,7 @@ class CatalogFileSystem {
         entry.setCompressed(compress);
         validateCatalogExistence(catalogId);
 
-        var entryDirectoryPath = new File(getCatalogURI(catalogId)).toPath().resolve(entry.getId());
+        var entryDirectoryPath = new File(getCatalogUri(catalogId)).toPath().resolve(entry.getId());
         createDirectory(entryDirectoryPath.toUri());
 
         List<String> topics = null;
@@ -184,6 +184,7 @@ class CatalogFileSystem {
             .collect(Collectors.toList());
     }
 
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     private List<File> listDirectories(File file) {
         return List.of(Objects.requireNonNull(file.listFiles(File::isDirectory)));
     }
@@ -208,6 +209,7 @@ class CatalogFileSystem {
         return Files.readString(file.toPath(), StandardCharsets.UTF_8);
     }
 
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     private void createDirectory(URI path) {
         File theDirectory = new File(path);
         if (!theDirectory.exists()) {
@@ -215,7 +217,7 @@ class CatalogFileSystem {
         }
     }
 
-    private URI getCatalogURI(String catalogName) {
+    private URI getCatalogUri(String catalogName) {
         return root.resolve(catalogName);
     }
 

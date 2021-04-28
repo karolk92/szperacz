@@ -53,7 +53,7 @@ public class CatalogController {
 
     @Delete("/{catalogId}/entries/{entryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    void removeCatalogEntry(String catalogId, String entryId){
+    void removeCatalogEntry(String catalogId, String entryId) {
         facade.removeEntry(catalogId, entryId);
     }
 }

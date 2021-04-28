@@ -125,6 +125,16 @@ public class PreprocessingFacade {
         return events == null ? List.of() : events.stream().map(e -> extractDataId(e.getBody())).collect(Collectors.toList());
     }
 
+    @SneakyThrows
+    private List<String> extractDataIds(String body) {
+        return MAPPER.readTree(body).get("elements").findValuesAsText("dataId");
+    }
+
+    @SneakyThrows
+    private String extractDataId(String body) {
+        return MAPPER.readTree(body).get("dataId").asText();
+    }
+
     private void addOutputEventsToBufferedEvents(List<BufferedEvent> bufferedEvents, List<Event> outputEvents) {
         List<String> dataIds = outputEvents.stream().map(e -> extractDataId(e.getBody())).collect(Collectors.toList());
 
@@ -142,16 +152,6 @@ public class PreprocessingFacade {
                 }
             }
         }
-    }
-
-    @SneakyThrows
-    private String extractDataId(String body) {
-        return MAPPER.readTree(body).get("dataId").asText();
-    }
-
-    @SneakyThrows
-    private List<String> extractDataIds(String body) {
-        return MAPPER.readTree(body).get("elements").findValuesAsText("dataId");
     }
 
     private void tryToInitialize() {

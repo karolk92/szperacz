@@ -8,12 +8,12 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Produces;
 import javax.inject.Inject;
 import pl.ec.kafka.szperacz.search.kafka.KafkaSearchingRequestScopeFacade;
-import pl.ec.kafka.szperacz.search.preprocessing.search.SearchPreprocessingRequest;
-import pl.ec.kafka.szperacz.search.preprocessing.search.SearchPreprocessingResponse;
 import pl.ec.kafka.szperacz.search.kafka.SearchRequest;
 import pl.ec.kafka.szperacz.search.kafka.SearchResponse;
 import pl.ec.kafka.szperacz.search.preprocessing.PreprocessingFacade;
 import pl.ec.kafka.szperacz.search.preprocessing.model.MapCluster;
+import pl.ec.kafka.szperacz.search.preprocessing.search.SearchPreprocessingRequest;
+import pl.ec.kafka.szperacz.search.preprocessing.search.SearchPreprocessingResponse;
 
 @Controller("/api/szperacz")
 public class SearchController {
