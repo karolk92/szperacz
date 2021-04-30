@@ -27,6 +27,7 @@
         <mockserver.version>5.10.0</mockserver.version>
         <sf-geojson.version>2.0.4</sf-geojson.version>
         <lombok.version>1.18.12</lombok.version>
+        <logback-classic.version>1.2.3</logback-classic.version>
         <micronaut-redis-lettuce.version>1.2.0</micronaut-redis-lettuce.version>
         <assertj-core.version>3.16.1</assertj-core.version>
         <guava.version>28.2-jre</guava.version>
@@ -78,6 +79,13 @@
             <groupId>io.micronaut.configuration</groupId>
             <artifactId>micronaut-redis-lettuce</artifactId>
             <version>${micronaut-redis-lettuce.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Utils libs -->
