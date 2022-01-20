@@ -1,0 +1,18 @@
+### dump events to file
+// @no-log
+POST localhost:8080/api/test/dump/buffered_out
+Content-Type: application/json
+
+{
+  "from": "11-12-2020T15:50:00",
+  "to": "11-12-2021T16:31:00",
+  "topics": [
+    "buffered_out"
+  ],
+  "key": "1046882"
+}
+
+### produces events to topic from file
+// @no-log
+GET localhost:8080/api/szperacz/topic/send/so_fiz_26b.json
+Content-Type: application/json

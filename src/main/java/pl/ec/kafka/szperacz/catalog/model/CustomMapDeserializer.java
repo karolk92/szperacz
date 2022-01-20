@@ -21,9 +21,21 @@ public class CustomMapDeserializer extends JsonDeserializer<Map<String, String>>
             Iterator<JsonNode> i = ((ArrayNode) readValueAsTree).elements();
             while (i.hasNext()) {
                 var jsonNode = i.next();
-                result.put(jsonNode.get(0).asText(), jsonNode.get(1).asText());
+
+                applyResult(result, jsonNode, "sorted_out");
+                applyResult(result, jsonNode, "preprocessed_out");
             }
         }
         return result;
+    }
+
+    private void applyResult(Map<String, String> result, JsonNode jsonNode, String fieldName) {
+        var sortedOut = jsonNode.get(fieldName);
+        if (sortedOut == null) return;
+
+        var text = sortedOut.asText();
+        if (text != null  && !text.isEmpty()) {
+            result.put(fieldName, text);
+        }
     }
 }

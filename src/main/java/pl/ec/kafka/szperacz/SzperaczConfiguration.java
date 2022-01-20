@@ -10,6 +10,7 @@ import lombok.Setter;
 public class SzperaczConfiguration {
 
     private int eventFetchLimit;
+    private String testProducerDirectory;
     private KafkaConfiguration kafka;
     private CatalogConfiguration catalog;
 

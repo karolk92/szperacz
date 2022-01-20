@@ -6,7 +6,7 @@ micronaut:
       enabled: true
 
 redis:
-  uri: redis://10.10.38.81:6379
+  uri: redis://localhost:6379
 
 logger:
   levels:
@@ -14,9 +14,10 @@ logger:
 
 szperacz:
   event-fetch-limit: 25000
+  test-producer-directory: "C:\\Users\\kkwit\\IdeaProjects\\il\\szperacz\\"
   kafka:
     group-id: szperacz
-    bootstrap-servers: 10.10.38.201:6667
+    bootstrap-servers: localhost:9092
   catalog:
     path: '/szperacz_catalog/'
     compress-files: false

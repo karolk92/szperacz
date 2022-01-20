@@ -101,7 +101,11 @@ public class PreprocessingFacade {
         addOutputEventsToBufferedEvents(bufferedEvents, outputSearchResult.getEvents());
         removeLeadingAndTrailingOutputEvents(bufferedEvents);
 
-        return new SearchPreprocessingResponse(bufferedEvents);
+        var filtered = bufferedEvents.stream()
+            .filter(x -> x.getOutputEvents() != null && !x.getOutputEvents().isEmpty())
+            .collect(Collectors.toList());
+
+        return new SearchPreprocessingResponse(filtered);
     }
 
     private void removeLeadingAndTrailingOutputEvents(List<BufferedEvent> bufferedEvents) {
