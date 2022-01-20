@@ -14,5 +14,5 @@ Content-Type: application/json
 
 ### produces events to topic from file
 // @no-log
-GET localhost:8080/api/szperacz/topic/send/so_fiz_26b.json
+GET localhost:8080/api/test/produce/SO_FIZ_26_1.json
 Content-Type: application/json

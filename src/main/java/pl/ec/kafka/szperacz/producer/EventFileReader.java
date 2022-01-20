@@ -14,7 +14,7 @@ public class EventFileReader {
 
     @SneakyThrows
     URL read(String fileName) {
-        String path = "test-data/" + fileName;
+        String path = "test/data/" + fileName;
         return resourceLoader.getResource(path)
             .orElseThrow(FileNotFoundException::new);
     }

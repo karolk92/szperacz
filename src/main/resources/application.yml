@@ -14,7 +14,7 @@ logger:
 
 szperacz:
   event-fetch-limit: 25000
-  test-producer-directory: "C:\\Users\\kkwit\\IdeaProjects\\il\\szperacz\\"
+  test-producer-directory: "C:\\Users\\kkwit\\IdeaProjects\\il\\szperacz\\test\\data"
   kafka:
     group-id: szperacz
     bootstrap-servers: localhost:9092
